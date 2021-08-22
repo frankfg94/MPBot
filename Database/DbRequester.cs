@@ -1,6 +1,7 @@
 ﻿using Bot_Test.Database.DbModels;
 using Bot_Test.Database.DbTools;
 using Bot_Test.Database.Extensions;
+using BT;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -201,7 +202,7 @@ namespace Bot_Test.Database
             }
             catch (Exception e)
             {
-
+                Program.PrintException(e);
             }
             return table;
         }
@@ -242,7 +243,7 @@ namespace Bot_Test.Database
                 {
                     if (Connection.State != ConnectionState.Closed)
                         Connection.Close();
-
+                    Program.PrintException(e);
                     return false;
                 }
             }
@@ -298,7 +299,7 @@ namespace Bot_Test.Database
 
                         if (Connection.State != ConnectionState.Closed)
                             Connection.Close();
-
+                    Program.PrintException(e);
                     return false;
                 }
             }
@@ -341,7 +342,7 @@ namespace Bot_Test.Database
                 {
                     if (Connection.State != ConnectionState.Closed)
                         Connection.Close();
-
+                    Program.PrintException(e);
                     return false;
                 }
             }

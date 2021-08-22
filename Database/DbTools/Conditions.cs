@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bot_Test.Database.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

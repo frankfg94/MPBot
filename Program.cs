@@ -7,7 +7,11 @@ using System.Windows.Threading;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Bot_Test.Database;
 using Microsoft.Extensions.DependencyInjection;
+using Bot_Test.Database.DbModels;
+using System.Collections.Generic;
+using Bot_Test.Database.Extensions;
 
 namespace BT
 {
@@ -17,6 +21,7 @@ namespace BT
     /// </summary>
     public class Program
     {
+        
         public static BT.MP.Discord.Communicator communicator { get; set; }
         public static bool MarsProtocolEnabled;
         private  DiscordSocketClient _client;
@@ -26,13 +31,31 @@ namespace BT
         [STAThread] // semble ne rien faire
         static void Main(string[] args) 
         {
+            try
+            {
+                DbRequester.SetConnection();
+            }
+            catch (Exception ex)
+            {
+                PrintException(ex);
+            }
             Console.WriteLine("Starting ...\n");
            
             new Program().RunBotAsync().GetAwaiter().GetResult();
         }
         //   public void InitDiscordBot() => new MainWindow().RunBotAsync().GetAwaiter().GetResult();
 
-
+        public static void PrintException(Exception? ex)
+        {
+            if (ex != null)
+            {
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine("Stacktrace:");
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine();
+                PrintException(ex.InnerException);
+            }
+        }
 
         // Access context features such as the discord client
         static public IServiceProvider _services;
