@@ -63,19 +63,9 @@ namespace Bot_Test.MP.Scripts
             watchers.Add(watcher);
         }
         private static void OnError(object sender, ErrorEventArgs e) =>
-            PrintException(e.GetException());
+            Program.PrintException(e.GetException());
 
-        private static void PrintException(Exception? ex)
-        {
-            if (ex != null)
-            {
-                Console.WriteLine($"Message: {ex.Message}");
-                Console.WriteLine("Stacktrace:");
-                Console.WriteLine(ex.StackTrace);
-                Console.WriteLine();
-                PrintException(ex.InnerException);
-            }
-        }
+        
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
