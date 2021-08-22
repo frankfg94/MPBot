@@ -1,8 +1,13 @@
-﻿using Bot_Test.MP.Scripts.Discord;
+﻿using Bot_Test;
+using Bot_Test.MP.Scripts;
+using Bot_Test.MP.Scripts.Discord;
+using BT.MP;
 using BT.MP.GUI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,21 +26,54 @@ namespace BT
     /// </summary>
     public partial class AdminPanel : Window
     {
-         AdminPanelOperations op;
-
+        AdminPanelOperations op;
+        public static List<Window> windows = new List<Window>();
+        public ObservableCollection<string> audiofilesNamesList { get; set; }
+        private readonly DelegateCommand playCommand;
+        public static ulong guildID;
+        public static ulong channelID;
         public AdminPanel()
         {
             Init();
+            playCommand = new DelegateCommand(PlayAudio);
+            Loaded += AdminPanel_Loaded;
+            windows.Add(this);
         }
 
+        private void AdminPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            DataContext = this;
+            weapon_Combobox.ItemsSource = Weapon.GetDefaultWeapons();
+            weapon_Combobox.SelectedIndex = 0;
+            InitAudio();
+            SyncData();
+            channelID_tBox.TextChanged += (s, e) => SyncData();
+        }
 
+        private void SyncData()
+        {
+            if (ulong.TryParse(channelID_tBox.Text, out ulong cId))
+            {
+                //guildID = gId;
+                channelID = cId;
+            }
+        }
 
         [STAThread]
         void Init()
         {
             op = new AdminPanelOperations();
             InitializeComponent();
+
         }
+
+
+        private void InitAudio()
+        {
+            new AudioExplorer(ref audioList_Lview, audioPath_tblock, true).RefreshList();
+        }
+
+        #region Buttons
 
         private void ArmBomb_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -62,7 +100,7 @@ namespace BT
 
         private void DEye_Button_Click(object sender, RoutedEventArgs e)
         {
-             new DeadEyeDiscord().Test();
+            new DeadEyeDiscord().TargetWithPanelData(this);
         }
 
         private void DesarmBomb_Button_Click(object sender, RoutedEventArgs e)
@@ -77,7 +115,30 @@ namespace BT
         {
             op.RearmSampleBomb();
             rearmBomb_Button.IsEnabled = false;
-            disarmBomb_Button.IsEnabled = false;
+            disarmBomb_Button.IsEnabled = true;
         }
+
+        #endregion Buttons
+
+        #region Commands
+
+        public DelegateCommand PlayAudioCommand { get { return playCommand; } }
+
+        private async void PlayAudio(object sender)
+        {
+            string fileNameAbsolute = Program.resourceFolderPath + "\\" + sender.ToString();
+            await BT.Program.communicator.PlayAudio(fileNameAbsolute, false);
+        }
+
+        #endregion Commands
+        // TODO : not working, replace with regex or find the cause
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+           if(!double.TryParse(e.Text,out double d))
+            {
+                e.Handled = false;
+            }
+        }
+
     }
 }

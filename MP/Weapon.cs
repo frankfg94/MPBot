@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Bot_Test.MP.Scripts.Discord;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +11,7 @@ namespace BT.MP
     /// <summary>
     /// Utilisé pour les descriptions en combat ou pour les recherches dans les coffres
     /// </summary>
-    internal enum WeaponCategory
+    public enum WeaponCategory
     {
         Pistol,
         Magnum,
@@ -27,23 +29,36 @@ namespace BT.MP
         Flamethrower
     }
 
-    internal class Weapon : Entity
+    public class Weapon : Entity
     {
+        public static ObservableCollection<Weapon> GetDefaultWeapons()
+        {
+            var ak = new Weapon("AK-47", 20, EntitySize.Medium, 0, 30, 65, 30, 30, 3, "Arme de guerre puissante et facile à fabriquer") { wepCategory = WeaponCategory.Rifle };
+            var sniper = new Weapon("Fusil de précision L96", 20, EntitySize.Medium, 0, 50, 90, 10, 10, 1, "Un fusil de précision à verrou, excellente puissance d'arrêt et précision. Malus de précision réduits") { wepCategory = WeaponCategory.Sniper };
+            var minigun = new Weapon("Minigun GAU-2B", 20, EntitySize.Medium, 0, 30, 25, 30, 30, 30, "Faites pleuvoir la mort sur vos ennemis") { wepCategory = WeaponCategory.MachineGun };
+            return new ObservableCollection<Weapon>
+            {
+                ak,
+                sniper,
+                minigun
+            };
+        }
+
         private double damage;
-        private double precision;
+        private float precision;
         private int curAmmo;
         private int maxAmmo;
         private double rateOfFire;
         private string description;
         public WeaponCategory wepCategory;
         public bool singleUsage = false;
-        public Weapon(string Name, int HP, EntitySize Size, double PsyLvl, double Damage, double Precision, int Curammo, int MaxAmmo, double Rate, string Description) : base(Name, HP, Size, PsyLvl)
+        public Weapon(string Name, int HP, EntitySize Size, double PsyLvl, double Damage, float Precision, int Curammo, int MaxAmmo, double rateOfFire, string Description) : base(Name, HP, Size, PsyLvl)
         {
             this.damage = Damage;
             this.precision = Precision;
             this.curAmmo = Curammo;
             this.maxAmmo = MaxAmmo;
-            this.rateOfFire = Rate;
+            this.rateOfFire = rateOfFire;
             this.description = Description;
         }
 
@@ -71,66 +86,64 @@ namespace BT.MP
             get { return description; }
         }
 
-        public double Precision { get => precision; set => precision = value; }
+        public float Precision { get => precision; set => precision = value; }
 
         //TODO : rajouter la possibilité de toucher des membres adjacents si echec
-        internal void ShootAt(Entity ennemyEntity, EntityPart targetedArea, out string description)
+        internal void ShootAt(Entity ennemyEntity, EntityPart targetedArea, Dictionary<EntityPartType,double> precisionDict, out string description)
         {
-            switch (targetedArea.size)
-            {
-                case EntitySize.Micro:
-                    precision /= 3;
-                    break;
-                case EntitySize.Small:
-                    precision /= 2;
-                    break;
-                case EntitySize.Medium:
-                    // La précision reste la même
-                    break;
-                case EntitySize.Large:
-                    precision += precision * 0.20;
-                    break;
-                case EntitySize.Huge:
-                    precision += precision * 0.40;
-                    break;
-                case EntitySize.Gigantic:
-                    precision += precision * 0.90;
-                    break;
-                default:
-                    break;
-            }
+            
 
             int shotSuccessfulCount = 0;
             Random r = new Random();
             
             for (int i = 0; i < rateOfFire; i++)
             {
-                if( r.NextDouble()  < precision/100 )
+                if( r.NextDouble()  < precisionDict[targetedArea.partType]/100 )
                 {
                      shotSuccessfulCount++;
                 }
             }
-            description = $"Le ** {ennemyEntity.status} ** se fait canarder d'une rafale de {wepCategory} {Name}  !";
-            description += $"\n\nAu final, il est touché par **  {shotSuccessfulCount} / {rateOfFire} impacts de balles ** à {targetedArea.partType}";
+            if(rateOfFire > 1)
+            {
+                description = $"Le ** {ennemyEntity.status} ** se fait canarder d'une rafale de {wepCategory} {Name}  !";
+                description += $"\n\nAu final, il est touché par **  {shotSuccessfulCount} / {rateOfFire} impacts de balles ** {Translator.endOfShootingSentence[targetedArea.partType]} .";
+            }
+            else
+            {
+                description = $"Vous tirez une fois sur le ** {ennemyEntity.status} ** avec votre {Name} {Translator.endOfShootingSentence[targetedArea.partType]}!";
+            }
 
             if (shotSuccessfulCount > 0)
             {
                 ennemyEntity.HP -= (int)(damage * shotSuccessfulCount * targetedArea.damageCoeff);
                 string description2 = "";
-                (ennemyEntity as IAdvancedTarget).TryInjure((int)(shotSuccessfulCount * damage * targetedArea.damageCoeff), targetedArea, out description2);
-                description += "\n" + description2;
+                (ennemyEntity as IAdvancedTarget).TryInjure((int)(shotSuccessfulCount * damage * targetedArea.damageCoeff),shotSuccessfulCount, targetedArea, out description2);
+                description += "\n" + description2 + "\n";
                 if (!ennemyEntity.IsAlive())
                 {
-                    description += " La rafale de balles le fait effondrer dans un cri brusque, " + ennemyEntity.Name + " n'est plus";
+                    if(rateOfFire > 1)
+                    {
+                        description += " La rafale de balles le fait effondrer dans un cri brusque, " + ennemyEntity.Name + " n'est plus";
+                    } 
+                    else
+                    {
+                        description += " Il meurt au sol rapidement, " + ennemyEntity.Name + " n'est plus";
+                    }
                 }
                 else
                 {
-                    description += "Il est toujours debout";
+                    description += "Il est toujours debout, santé restante : " + ennemyEntity.HP + " / " + ennemyEntity.maxHP;
                 }
             }
             else
             {
-                description += "Aucune balle n'a touché l'ennemi à " + targetedArea.partType + " c'est un échec !";
+                if(rateOfFire > 1)
+                {
+                    description += $"Aucune balle n'a touché {Name} c'est un échec !";
+                } else
+                {
+                    description += "Votre tir unique n'a pas atteint l'ennemi";
+                }
             }
 
           

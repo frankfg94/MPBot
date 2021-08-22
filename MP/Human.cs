@@ -46,12 +46,12 @@ namespace BT.MP
         }
 
 
-        public void GetShotAt( EntityPart targetedArea, Entity objectForAttack, out string attackDescription)
+        public void GetShotAt( EntityPart targetedArea, Entity objectForAttack,Dictionary<EntityPartType,double> precisionDict, out string attackDescription)
         {
             attackDescription = "Erreur de Out attackDescription";
             if(objectForAttack is Weapon)
             {
-                (objectForAttack as Weapon).ShootAt(this,targetedArea,out attackDescription);
+                (objectForAttack as Weapon).ShootAt(this,targetedArea,precisionDict,out attackDescription);
             }
             else if( objectForAttack == null) // attaque corps à corps
             {
@@ -72,7 +72,7 @@ namespace BT.MP
         }
 
         
-        public void TryInjure(int dmg, EntityPart targetedPart, out string descr)
+        public void TryInjure(int dmg, int successShot, EntityPart targetedPart, out string descr)
         {
             descr = "";
             if(targetedPart.partType == EntityPartType.Hand )
@@ -86,11 +86,33 @@ namespace BT.MP
                     descr = "La personne visée se prend une balle dans la main et recula crispée en s'appuyant contre un mur!";
                 }
             }
+            if(targetedPart.partType == EntityPartType.Chest)
+            {
+                if(dmg >= 100 )
+                {
+                    if(successShot == 1)
+                    {
+                        descr = " Le tir haute puissance traversa la cage thoracique de l'adversaire, qui éclata en éméttant des morceaux d'os sanguinolents";
+                    } else if (dmg > 300)
+                    {
+                        descr = " Les multiples tirs dévastateurs traversent la cible ennemie de toutes part, il tombe au sol en hurlant et en perdant des morceaux de chair";
+                    }
+                }
+
+            }
             if(targetedPart.partType == EntityPartType.Head)
             {
-                if (dmg > 40)
+                if(dmg > 200 && successShot > 8)
                 {
-                    descr = "[COUP CRITIQUE]la rafale tirée de balles décrocha la tête de l'humain";
+                    descr = " sa tête se fit progressivement réduire en bouillie sous le déluge de projectiles tiré!";
+                }
+                else if (dmg > 60 && successShot == 1)
+                {
+                    descr = "[COUP CRITIQUE] sa tête explosa comme une pastèque sous la puissance du projectile";
+                }
+                else if (dmg > 40)
+                {
+                    descr = "[COUP CRITIQUE] la rafale tirée de balles décrocha la tête de l'humain";
                 }
                 else
                 {

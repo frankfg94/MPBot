@@ -15,9 +15,9 @@ namespace BT.MP
         /// <param name="dmg"></param>
         /// <param name="targetedPart"></param>
         /// <param name="descr"></param>
-        void TryInjure(int dmg,EntityPart targetedPart, out string descr);
+        void TryInjure(int dmg, int successShots, EntityPart targetedPart, out string descr);
 
-        void GetShotAt(EntityPart targetedArea, Entity objectForAttack, out string attackDescription);
+        void GetShotAt(EntityPart targetedArea, Entity objectForAttack, Dictionary<EntityPartType,double> precisionDict, out string attackDescription);
         Entity Entity { get;  }
     }
 }

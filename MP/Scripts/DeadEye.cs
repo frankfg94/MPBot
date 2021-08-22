@@ -13,12 +13,12 @@ namespace BT.MP.Scripts
     {
 
   
-        public virtual async Task TargetAnEntityAsync(IAdvancedTarget e)
+        public virtual async Task TargetAnEntityAsync(IAdvancedTarget e, Weapon w, List<DeadEyeModifier> modifiers)
         {
             Console.WriteLine($"Quelle partie de la cible {e.Entity.Name} souhaitez vous cibler ?");
             foreach(var area in e.GetTargetableAreas())
             {
-                Console.WriteLine($":large_blue_circle:  Viser la partie : {area.partType}  | efficacité : {area.damageCoeff*100}%");
+                Console.WriteLine($" Viser la partie : {area.partType}  | efficacité : {area.damageCoeff*100}%");
             }
         }
 

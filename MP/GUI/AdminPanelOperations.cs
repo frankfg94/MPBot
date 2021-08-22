@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace BT.MP.GUI
 {
@@ -52,5 +53,7 @@ namespace BT.MP.GUI
         {
             Task.Run(() => Program.communicator.Initialize());
         }
+
+        
     }
 }

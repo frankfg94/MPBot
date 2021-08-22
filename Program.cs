@@ -3,16 +3,13 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Threading;
-using BT.MP.GUI;
-using BT.MP.Scripts;
 using Discord;
 using Discord.Commands;
-using Discord.WebSocket;    
+using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BT   
+namespace BT
 {
 
     /// <summary>
@@ -22,6 +19,10 @@ namespace BT
     {
         public static BT.MP.Discord.Communicator communicator { get; set; }
         public static bool MarsProtocolEnabled;
+        private  DiscordSocketClient _client;
+        private CommandService _commands;
+        public static readonly string resourceFolderPath = System.AppDomain.CurrentDomain.BaseDirectory + "Resources";
+
         [STAThread] // semble ne rien faire
         static void Main(string[] args) 
         {
@@ -31,11 +32,12 @@ namespace BT
         }
         //   public void InitDiscordBot() => new MainWindow().RunBotAsync().GetAwaiter().GetResult();
 
-        private DiscordSocketClient _client;
-        private CommandService _commands;
+
+
+        // Access context features such as the discord client
         static public IServiceProvider _services;
 
-        string[] lines = File.ReadAllLines("token.txt");
+        //string[] lines = File.ReadAllLines("token.txt");
         private string botToken;
 
 
@@ -71,17 +73,16 @@ namespace BT
             Ping p = new Ping().Init(_client);
             _client.ReactionAdded += p.ReactionParse;
 
-            botToken = lines[0];
-            await _client.LoginAsync(TokenType.Bot, botToken);
-
+            await _client.LoginAsync(TokenType.Bot, File.ReadAllText("botToken.txt").Trim());
             await _client.StartAsync();
 
-            communicator = new BT.MP.Discord.Communicator(_client, _commands,audioService);
+            communicator = new MP.Discord.Communicator(_client, _commands,audioService);
             //Mars protocol
             _client.ReactionAdded += communicator.ParseReaction;
             Thread t = new Thread(new ThreadStart(() =>
             {
                 var main = new AdminPanel();
+                main.InitializeComponent();
                 main.Show();
                 Dispatcher.Run();
             }));
@@ -98,8 +99,8 @@ namespace BT
 
         public async Task VoiceUpdate(SocketUser user, SocketVoiceState state, SocketVoiceState state2) //welcomes New Players
         {
-            var channel = _client.GetChannel(370666551306616845) as SocketTextChannel; //gets channel to send message in
-            await channel.SendMessageAsync("Audio mis à jour pour " + user + "\nmuté :" + state.IsMuted + "\nChaine :" + state.VoiceChannel);
+            //var channel = _client.GetChannel(370666551306616845) as SocketTextChannel; //gets channel to send message in
+            //await channel.SendMessageAsync("Audio mis à jour pour " + user + "\nmuté :" + state.IsMuted + "\nChaine :" + state.VoiceChannel);
         }
 
         public async Task AnnounceJoinedUser(SocketGuildUser user) //welcomes New Players

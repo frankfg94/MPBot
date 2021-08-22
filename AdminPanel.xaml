@@ -5,15 +5,91 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Fenetre de contrôle">
+      Title="Fenetre de contrôle - Mars Protocol">
 
     <Grid>
-        <Button x:Name="armBomb_Button" Content="Armer la bombe" Click="ArmBomb_Button_Click" Height="20" Width="100" Margin="47,47,653,367.04" />
-        <Button x:Name="lobby_Button" Content="Lobby" Click="Lobby_Button_Click" Height="20" Width="100" Margin="47,97,653,317.04" />
-        <Button x:Name="stopAudio_Button" Content="Stop Audio" Click="StopAudio_Button_Click" Height="20" Width="100" Margin="47,151,653,263.04" />
-        <Button x:Name="initCom_Button" Content="Init" Click="InitCom_Button_Click" Height="20" Width="100" Margin="47,197,653,217.04" />
-        <Button x:Name="dEye_Button" Content="Dead Eye (test)" Click="DEye_Button_Click" Height="20" Width="100" Margin="47,197,653,217.04" />
-        <Button x:Name="disarmBomb_Button" IsEnabled="False" Content="Désarmer" Click="DesarmBomb_Button_Click" Height="20" Width="100" Margin="173,47,527,367.04" />
-        <Button x:Name="rearmBomb_Button" IsEnabled="False" Content="Réarmer" Click="RearmBomb_Button_Click" Height="20" Width="100" Margin="300,47,400,367.04" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition ></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Button  Grid.Column="0" x:Name="lobby_Button" Content="Lobby" Click="Lobby_Button_Click" Height="20" Width="100"  />
+            <Button  Grid.Column="0" x:Name="stopAudio_Button" Content="Stop Audio" Click="StopAudio_Button_Click" Height="20" Width="100" />
+            <Button  Grid.Column="0"  x:Name="initCom_Button" Content="Init" Click="InitCom_Button_Click" Height="20" Width="100" />
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition ></ColumnDefinition>
+                    <ColumnDefinition ></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="25.96"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Label>Nom de la cible</Label>
+                <TextBox Grid.Column="1" Grid.Row="0" Text="l'ennemi" x:Name="enemy_name_Tbox"  Height="20" Width="100"  />
+                <Label Grid.Row="1">Arme</Label>
+                <ComboBox  DisplayMemberPath="Name"  Grid.Column="1" Grid.Row="1" x:Name="weapon_Combobox"  Height="20" Width="100"  />
+                <Label Grid.Row="2">Métier</Label>
+                <TextBox Grid.Column="1"  Grid.Row="2" x:Name="enemy_job_Tbox" Text="soldat" Height="20" Width="100"  />
+
+                <Label Grid.Row="3">Accuracy bonus/malus</Label>
+                <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox"  Grid.Row="3" x:Name="precision_Tbox" Text="0" Height="20" Width="100"  />
+                <Label Grid.Row="4">bonus/malus msg</Label>
+                <TextBox Grid.Column="1"  Grid.Row="4" x:Name="precision_msg_Tbox"   Height="20" Width="100"  />
+
+                <Label Grid.Row="5">Activer Deadeye</Label>
+                <Button Grid.Column="1"  Grid.Row="5" x:Name="dEye_Button" Content="Dead Eye !" Click="DEye_Button_Click" Height="20" Width="100"  />
+
+            </Grid>
+            <Button Grid.Column="0" x:Name="armBomb_Button" Content="Armer la bombe" Click="ArmBomb_Button_Click" Height="20" Width="100"  />
+            <Button  Grid.Column="0" x:Name="disarmBomb_Button" IsEnabled="False" Content="Désarmer" Click="DesarmBomb_Button_Click" Height="20" Width="100" />
+            <Button  Grid.Column="0" x:Name="rearmBomb_Button" IsEnabled="False" Content="Réarmer" Click="RearmBomb_Button_Click" Height="20" Width="100" />
+        </StackPanel>
+
+
+        <StackPanel  Grid.Column="1" >
+            <TextBlock  Grid.Column="1"  >ID du canal texte pour notifs (skip init command)</TextBlock>
+            <TextBox Grid.Column="1"  x:Name="channelID_tBox" Height="30" MaxWidth="300"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <TextBlock x:Name="audioPath_tblock" Margin="20"></TextBlock>
+        <ListView 
+            MaxWidth="250"
+            MinHeight="50"
+            x:Name="audioList_Lview"
+            Grid.Column="3"
+            >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Nom">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Width="140" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    x:Name="play_button"
+                                    Command="{Binding ElementName=audioList_Lview, Path=DataContext.PlayAudioCommand, Mode=OneTime}"
+                                    CommandParameter="{Binding}"
+                                    Width="30"
+                                    Content="Lire">
+                                    <!--Image Source="" /-->
+                                </Button>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        </StackPanel>
     </Grid>
 </Window>

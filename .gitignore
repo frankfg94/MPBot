@@ -338,3 +338,10 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Discord Token file
+botToken.txt
+
+ffmpeg.exe
+ffplay.exe
+ffprobe.exe

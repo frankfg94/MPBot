@@ -22,14 +22,13 @@ namespace BT.MP
         public List<EntityPart> parts;
         private double psyLvl;
         public string status; // Mot tag
-
-
-
+        public readonly int maxHP;
 
         public Entity(string Name, int HP, EntitySize Size, double PsyLvl)
         {
             this.name = Name;
             this.hp = HP;
+            this.maxHP = HP;
             this.psyLvl = PsyLvl;
             this.size = Size;
         }

@@ -20,7 +20,7 @@ namespace BT.MP.Discord
         private SocketReaction lastImportantReaction;
 
 
-        internal List<ulong> msgIdsToWatch;
+        internal List<ulong> msgIdsToWatch = new List<ulong>();
         public static TaskCompletionSource<bool> tcs = null;
 
         public static bool IsInitialized { get { return commandContext != null; } }
@@ -38,7 +38,6 @@ namespace BT.MP.Discord
 
         public async Task<global::Discord.Rest.RestUserMessage> DisplayEmbedInChat(Embed embed)
         {
-            await commandContext.Channel.SendMessageAsync("Ceci est un test audio, fin", true);
             return await commandContext.Channel.SendMessageAsync(null,false, embed);
         }
 
@@ -95,7 +94,7 @@ namespace BT.MP.Discord
                 Console.WriteLine("Synchronisation effectuée avec succès");
             }
             if(commandContext==null)
-                Console.Error.WriteLine("Echec synchronisation");
+                Console.Error.WriteLine("Echec de synchronisation");
         }
 
         internal void SetNickNamePlayers(string v, IReadOnlyCollection<SocketGuildUser> users)
@@ -178,14 +177,16 @@ namespace BT.MP.Discord
                 if(!joinedAudio)
                 {
                     Console.WriteLine("Pas besoin de rejoindre l'audio");
-                await am.JoinCmd();
+                    await am.JoinCmd();
                 }
             }
             catch (Exception)
             {
                 Console.WriteLine("Echec audio bombe");
             }
-            await am.PlayCmd(path);
+
+                await am.PlayCmd(path);
+            
         }
 
 

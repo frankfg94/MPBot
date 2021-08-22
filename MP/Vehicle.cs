@@ -15,7 +15,7 @@ namespace BT.MP
 
         public Entity Entity => this;
 
-        public void GetShotAt(EntityPart targetedArea, Entity objectForAttack, out string attackDescription)
+        public void GetShotAt(EntityPart targetedArea, Entity objectForAttack, Dictionary<EntityPartType,double> precisionDict, out string attackDescription)
         {
             throw new NotImplementedException();
         }
@@ -35,7 +35,9 @@ namespace BT.MP
 
         }
 
-        public void TryInjure(int dmg, EntityPart targetedPart, out string descr)
+
+
+        public void TryInjure(int dmg, int successShots, EntityPart targetedPart, out string descr)
         {
             throw new NotImplementedException();
         }
