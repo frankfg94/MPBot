@@ -15,11 +15,11 @@ namespace Bot_Test.MP.Scripts
         private readonly ListView audioList_Lview;
         static List<FileSystemWatcher> watchers = new List<FileSystemWatcher>(); // use static list to keep watcher alive
 
-        public AudioExplorer(ref ListView audioList_Lview, TextBlock display, bool watchFolder)
+        public AudioExplorer(ref ListView audioList_Lview, TextBlock resPathTblock, bool watchFolder)
         {
             this.audioList_Lview = audioList_Lview;
-            display.Dispatcher.Invoke(new Action(()=>{
-                display.Text = "Chemin: " + Program.resourceFolderPath;
+            resPathTblock.Dispatcher.Invoke(new Action(()=>{
+                resPathTblock.Text = "Chemin: " + Program.resourceFolderPath;
             }));
             if (watchFolder) watch();
         }
