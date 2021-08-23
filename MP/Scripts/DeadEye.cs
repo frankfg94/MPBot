@@ -1,4 +1,4 @@
-﻿using Bot_Test.MP.Scripts.Discord;
+﻿using BT.MP.Scripts.Discord;
 using Discord;
 using System;
 using System.Collections.Generic;

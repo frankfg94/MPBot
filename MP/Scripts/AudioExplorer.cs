@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BT;
 
-namespace Bot_Test.MP.Scripts
+namespace BT.MP.Scripts
 {
     public class AudioExplorer
     {

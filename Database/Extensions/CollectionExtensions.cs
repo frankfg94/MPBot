@@ -1,4 +1,4 @@
-﻿using Bot_Test.Database.DbTools;
+﻿using BT.Database.DbTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot_Test.Database.Extensions
+namespace BT.Database.Extensions
 {
     public static class CollectionExtension
     {

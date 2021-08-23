@@ -1,5 +1,5 @@
-﻿using Bot_Test.Database;
-using Bot_Test.MP.Scripts.Discord;
+﻿using BT.Database;
+using BT.MP.Scripts.Discord;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

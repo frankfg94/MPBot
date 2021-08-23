@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bot_Test.MP.Discord.Exclusive
+namespace BT.MP.Discord.Exclusive
 {
     public class EndMPDiscord
     {

@@ -1,11 +1,11 @@
-﻿using Bot_Test.Database.Extensions;
+﻿using BT.Database.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot_Test.Database.DbTools
+namespace BT.Database.DbTools
 {
     public class Conditions
     {

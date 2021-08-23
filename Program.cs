@@ -7,11 +7,11 @@ using System.Windows.Threading;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Bot_Test.Database;
+using BT.Database;
 using Microsoft.Extensions.DependencyInjection;
-using Bot_Test.Database.DbModels;
+using BT.Database.DbModels;
 using System.Collections.Generic;
-using Bot_Test.Database.Extensions;
+using BT.Database.Extensions;
 
 namespace BT
 {

@@ -1,6 +1,6 @@
-﻿using Bot_Test;
-using Bot_Test.MP.Scripts;
-using Bot_Test.MP.Scripts.Discord;
+﻿using BT;
+using BT.MP.Scripts;
+using BT.MP.Scripts.Discord;
 using BT.MP;
 using BT.MP.GUI;
 using System;

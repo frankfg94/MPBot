@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot_Test.MP.Scripts.Discord
+namespace BT.MP.Scripts.Discord
 {
     class DeadEyeDiscord : DeadEye, IAnswerable
     {

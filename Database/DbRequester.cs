@@ -1,6 +1,6 @@
-﻿using Bot_Test.Database.DbModels;
-using Bot_Test.Database.DbTools;
-using Bot_Test.Database.Extensions;
+﻿using BT.Database.DbModels;
+using BT.Database.DbTools;
+using BT.Database.Extensions;
 using BT;
 using Microsoft.Data.Sqlite;
 using System;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot_Test.Database
+namespace BT.Database
 {
     public static class DbRequester
     {

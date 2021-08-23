@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Bot_Test.MP.Scripts.Discord
+namespace BT.MP.Scripts.Discord
 {
 
     /// <summary>

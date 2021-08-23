@@ -1,11 +1,11 @@
-﻿using Bot_Test.Database.DbTools;
+﻿using BT.Database.DbTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot_Test.Database
+namespace BT.Database
 {
     public static class Data
     {

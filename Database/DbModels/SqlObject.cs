@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot_Test.Database.DbModels
+namespace BT.Database.DbModels
 {
     public class SqlObject
     {
