@@ -1,4 +1,5 @@
-﻿using Bot_Test.MP.Scripts.Discord;
+﻿using Bot_Test.Database;
+using Bot_Test.MP.Scripts.Discord;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,6 +34,9 @@ namespace BT.MP
     {
         public static ObservableCollection<Weapon> GetDefaultWeapons()
         {
+            if(DbRequester.Connection == null)
+            {
+            // Use default weapons
             var ak = new Weapon("AK-47", 20, EntitySize.Medium, 0, 30, 65, 30, 30, 3, "Arme de guerre puissante et facile à fabriquer") { wepCategory = WeaponCategory.Rifle };
             var sniper = new Weapon("Fusil de précision L96", 20, EntitySize.Medium, 0, 50, 90, 10, 10, 1, "Un fusil de précision à verrou, excellente puissance d'arrêt et précision. Malus de précision réduits") { wepCategory = WeaponCategory.Sniper };
             var minigun = new Weapon("Minigun GAU-2B", 20, EntitySize.Medium, 0, 30, 25, 30, 30, 30, "Faites pleuvoir la mort sur vos ennemis") { wepCategory = WeaponCategory.MachineGun };
@@ -42,6 +46,13 @@ namespace BT.MP
                 sniper,
                 minigun
             };
+            } else
+            {
+                var data = DbRequester.ExecuteSelectQuery("SELECT * from Weapon w JOIN Precision p ON w.precision_id=p.precision_id " +
+                                                                                 "JOIN Damage d ON w.damage_id=d.damage_id").Select().ToList();
+                Console.WriteLine();
+            }
+            return null;
         }
 
         private double damage;
