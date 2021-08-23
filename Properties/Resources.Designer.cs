@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BT.Properties {
+namespace Bot_Test.Properties {
     using System;
     
     

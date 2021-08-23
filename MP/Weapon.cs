@@ -1,5 +1,5 @@
-﻿using BT.Database;
-using BT.MP.Scripts.Discord;
+﻿using Bot_Test.Database;
+using Bot_Test.MP.Scripts.Discord;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BT.MP
+namespace Bot_Test.MP
 {
     /// <summary>
     /// Utilisé pour les descriptions en combat ou pour les recherches dans les coffres

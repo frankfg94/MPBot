@@ -1,17 +1,20 @@
-﻿using BT.Database.DbTools;
+﻿using Bot_Test.Database.DbTools;
+using Bot_Test.Database.Views;
+using Bot_Test.Database.DbTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BT.Database
+namespace Bot_Test.Database
 {
     public static class Data
     {
         public static Dictionary<Comparator, string> operators { get; set; }
         public static List<SqlFunction> Functions { get; set; }
         public static Dictionary<LogicalOperator, string> logicalOperators { get; set; }
+        public static List<Tables> Tables { get; set; }
 
         public static void Init()
         {
@@ -33,6 +36,11 @@ namespace BT.Database
             logicalOperators.Add(LogicalOperator.AND, "AND");
             logicalOperators.Add(LogicalOperator.OR, "OR");
             logicalOperators.Add(LogicalOperator.NONE, "");
+
+            Tables = new List<Tables>()
+            {
+                new Tables("Weapon", "name")
+            };
         }
     }
 }

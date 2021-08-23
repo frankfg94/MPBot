@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BT.MP
+namespace Bot_Test.MP
 {
     public class EntityPart
     {

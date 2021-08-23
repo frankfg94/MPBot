@@ -1,4 +1,4 @@
-﻿namespace BT.MP.Scripts.Discord
+﻿namespace Bot_Test.MP.Scripts.Discord
 {
     public class EntityModifier
     {

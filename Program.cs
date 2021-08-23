@@ -7,13 +7,13 @@ using System.Windows.Threading;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using BT.Database;
+using Bot_Test.Database;
 using Microsoft.Extensions.DependencyInjection;
-using BT.Database.DbModels;
+using Bot_Test.Database.DbModels;
 using System.Collections.Generic;
-using BT.Database.Extensions;
+using Bot_Test.Database.Extensions;
 
-namespace BT
+namespace Bot_Test
 {
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace BT
     public class Program
     {
         
-        public static BT.MP.Discord.Communicator communicator { get; set; }
+        public static Bot_Test.MP.Discord.Communicator communicator { get; set; }
         public static bool MarsProtocolEnabled;
         private  DiscordSocketClient _client;
         private CommandService _commands;

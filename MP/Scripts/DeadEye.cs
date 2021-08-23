@@ -1,4 +1,4 @@
-﻿using BT.MP.Scripts.Discord;
+﻿using Bot_Test.MP.Scripts.Discord;
 using Discord;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BT.MP.Scripts
+namespace Bot_Test.MP.Scripts
 {
 
     public class DeadEye 

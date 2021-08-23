@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BT.Database.DbTools
+namespace Bot_Test.Database.DbTools
 {
     public class Column
     {

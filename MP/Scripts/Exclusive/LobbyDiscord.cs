@@ -1,4 +1,4 @@
-﻿using BT;
+﻿using Bot_Test;
 using Discord;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace BT.MP.Discord.Exclusive
+namespace Bot_Test.MP.Discord.Exclusive
 {
     public class LobbyDiscord
     {

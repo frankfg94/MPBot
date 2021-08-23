@@ -1,4 +1,4 @@
-﻿using BT.MP.Scripts.Discord;
+﻿using Bot_Test.MP.Scripts.Discord;
 using Discord;
 using Discord.Commands;
 using Discord.Rest;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BT.MP.Discord
+namespace Bot_Test.MP.Discord
 {
     public class Communicator : ModuleBase<SocketCommandContext>
     {
@@ -84,8 +84,8 @@ namespace BT.MP.Discord
         [Command("init", RunMode = RunMode.Async)]
         public async Task Initialize()
         {
-            Console.WriteLine(" Initialisé : " +commandContext==null);
-            Console.WriteLine(" Contexte existe :  "+  Context==null);
+            Console.WriteLine(" Initialisé : " + commandContext == null);
+            Console.WriteLine(" Contexte existe :  " + Context == null);
 
             if (commandContext == null && Context != null)
             {
@@ -170,7 +170,7 @@ namespace BT.MP.Discord
         {
             if (commandContext == null)
                 commandContext = Context;
-            AudioModule am = new AudioModule((AudioService)BT.Program._services.GetService(typeof(AudioService)));
+            AudioModule am = new AudioModule((AudioService)Bot_Test.Program._services.GetService(typeof(AudioService)));
             am.SetCommandContext(commandContext);
             try
             {
@@ -199,7 +199,7 @@ namespace BT.MP.Discord
         {
             if (commandContext == null)
                 commandContext = Context;
-            AudioModule am = new AudioModule((AudioService)BT.Program._services.GetService(typeof(AudioService)));
+            AudioModule am = new AudioModule((AudioService)Bot_Test.Program._services.GetService(typeof(AudioService)));
             am.SetCommandContext(commandContext);
             try
             {

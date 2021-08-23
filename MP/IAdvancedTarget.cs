@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BT.MP
+namespace Bot_Test.MP
 {
     /// <summary>
     /// Cible qui peut être visée membre par membre grâce à une capacité spéciale de tir

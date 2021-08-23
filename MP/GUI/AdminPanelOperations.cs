@@ -1,6 +1,6 @@
-﻿using BT.MP.Discord;
-using BT.MP.Discord.Exclusive;
-using BT;
+﻿using Bot_Test.MP.Discord;
+using Bot_Test.MP.Discord.Exclusive;
+using Bot_Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
-namespace BT.MP.GUI
+namespace Bot_Test.MP.GUI
 {
     public class AdminPanelOperations
     {
@@ -18,7 +18,7 @@ namespace BT.MP.GUI
         internal void ArmSampleBomb()
         {
             Console.WriteLine("Starting the bomb");
-            b = new BombDiscord("C4", 10, 0, BT.MP.EntitySize.Small, 3500);
+            b = new BombDiscord("C4", 10, 0, Bot_Test.MP.EntitySize.Small, 3500);
             b.Arm(TimeSpan.FromSeconds(40));
         }
 

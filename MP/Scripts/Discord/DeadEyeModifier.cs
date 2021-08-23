@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace BT.MP.Scripts.Discord
+namespace Bot_Test.MP.Scripts.Discord
 {
     public class DeadEyeModifier
     {

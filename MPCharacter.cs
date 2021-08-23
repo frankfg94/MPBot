@@ -7,7 +7,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace BT
+namespace Bot_Test
 {
     public class MPCharacter
     {

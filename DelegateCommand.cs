@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace BT
+namespace Bot_Test
 {
     public class DelegateCommand : ICommand
     {

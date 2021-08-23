@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BT
+namespace Bot_Test
 {
     public static class QType
     {
