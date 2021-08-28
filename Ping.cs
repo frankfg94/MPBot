@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using Bot_Test.MP.Scripts.Discord;
+using BT.MP.Discord;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using System;
@@ -15,7 +17,7 @@ namespace BT
 {
     public class Ping : ModuleBase<SocketCommandContext>
     {
-
+        static int i = 1;
         private DiscordSocketClient _client = (DiscordSocketClient)Program._services.GetService(typeof(DiscordSocketClient));
 
         async Task<int> LoadDataAsync()
@@ -25,9 +27,7 @@ namespace BT
             return 42;
         }
 
-        public Ping()
-        {
-        }
+
 
         [Command("a")]
         public async Task ObtainTheFileAsync()
@@ -289,6 +289,14 @@ namespace BT
                     await u.ModifyAsync(x => x.Nickname = u.Username);
             }
             await ReplyAsync("Vos pseudos sont revenus à la normale ! :eyeglasses: ");
+        }
+
+        [RequireOwner]
+        [Command("deadeye", RunMode = RunMode.Async)]
+        public async Task Deadeye()
+        {
+            await BT.Program.communicator.InitContext();
+            //new DeadEyeDiscord().TargetWithPanelData(Program.adminPanel,Context);
         }
 
         [Command("help", RunMode = RunMode.Async)]
@@ -627,7 +635,8 @@ namespace BT
         }
 
 
-        static int i = 1;
+
+
         [Command("start", RunMode = RunMode.Async)]
         public async Task StartQCM([Remainder] string qcmName)
         {

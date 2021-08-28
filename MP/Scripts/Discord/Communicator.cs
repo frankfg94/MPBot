@@ -1,4 +1,5 @@
-﻿using Bot_Test.MP.Scripts.Discord;
+﻿using Bot_Test;
+using Bot_Test.MP.Scripts.Discord;
 using Discord;
 using Discord.Commands;
 using Discord.Rest;
@@ -70,7 +71,7 @@ namespace BT.MP.Discord
             {
                 msgIdsToWatch.Remove(msg.Id);
                 Console.WriteLine("Réponse obtenue WaitForReaction()");
-                return lastImportantReaction as SocketReaction;
+                return lastImportantReaction;
             }
             else
             {
@@ -82,10 +83,38 @@ namespace BT.MP.Discord
 
 
         [Command("init", RunMode = RunMode.Async)]
-        public async Task Initialize()
+        public async Task SetCurChannelAsContext()
         {
-            Console.WriteLine(" Initialisé : " +commandContext==null);
-            Console.WriteLine(" Contexte existe :  "+  Context==null);
+            await InitContext();
+        }
+
+        [RequireOwner]
+        [Command("deadeye2", RunMode = RunMode.Async)]
+        public async Task DeadEye2()
+        {
+            await InitContext();
+            new DeadEyeDiscord().TargetWithPanelData(Program.adminPanel, Context);
+        }
+
+        // TODO : Display each player's skills
+        public async Task GetSkills()
+        {
+            ShowPassiveSkills();
+            //ShowFightingSkills();
+            //ShowPsySkills();
+        }
+
+        private async Task ShowPassiveSkills()
+        {
+            Player p  = new(Context.User.Id);
+            // TODO : fill the embed
+            await DisplayEmbedInChat(p.GetPassiveSkillsEmbed());
+        }
+
+        public async Task InitContext()
+        {
+            Console.WriteLine(" Initialisé : " + commandContext == null);
+            Console.WriteLine(" Contexte existe :  " + Context == null);
 
             if (commandContext == null && Context != null)
             {
@@ -93,7 +122,7 @@ namespace BT.MP.Discord
                 commandContext = Context;
                 Console.WriteLine("Synchronisation effectuée avec succès");
             }
-            if(commandContext==null)
+            if (commandContext == null)
                 Console.Error.WriteLine("Echec de synchronisation");
         }
 

@@ -18,7 +18,7 @@ namespace BT.MP.GUI
         internal void ArmSampleBomb()
         {
             Console.WriteLine("Starting the bomb");
-            b = new BombDiscord("C4", 10, 0, BT.MP.EntitySize.Small, 3500);
+            b = new BombDiscord("C4", 10, 0, BT.MP.EntitySize.Small, 5000);
             b.Arm(TimeSpan.FromSeconds(40));
         }
 
@@ -51,7 +51,7 @@ namespace BT.MP.GUI
 
         internal void InitContextVar()
         {
-            Task.Run(() => Program.communicator.Initialize());
+            Task.Run(() => Program.communicator.SetCurChannelAsContext());
         }
 
         

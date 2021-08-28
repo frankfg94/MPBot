@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using static BT.MP.Weapon;
 
 namespace BT.MP
 {
@@ -17,7 +18,7 @@ namespace BT.MP
         /// <param name="descr"></param>
         void TryInjure(int dmg, int successShots, EntityPart targetedPart, out string descr);
 
-        void GetShotAt(EntityPart targetedArea, Entity objectForAttack, Dictionary<EntityPartType,double> precisionDict, out string attackDescription);
+        void GetShotAt(EntityPart targetedArea, Entity objectForAttack, Dictionary<EntityPartType,double> precisionDict,WeaponRange range, out string attackDescription);
         Entity Entity { get;  }
     }
 }

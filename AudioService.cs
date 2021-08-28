@@ -15,6 +15,8 @@ namespace BT
 
 
         IAudioClient client;
+        private AudioOutStream discord;
+
         public async Task JoinAudio(IGuild guild, IVoiceChannel channel)
         {
             try
@@ -30,14 +32,14 @@ namespace BT
                     Console.WriteLine("2");
                     return;
                 }
-
+                 
                 if (channel == null)
                 {
                     Console.WriteLine("You need to be in a voice channel, or pass one as an argument.");
                     return;
                 }
+                
                 IAudioClient audioClient = await channel.ConnectAsync();
-
                 if (ConnectedChannels.TryAdd(guild.Id, audioClient))
                 {
                     // If you add a method to log happenings from this service,
@@ -100,33 +102,35 @@ namespace BT
 
             if (ConnectedChannels.TryGetValue(guild.Id, out IAudioClient client))
             {
+                if(discord == null)
+                {
+                    discord = client.CreatePCMStream(AudioApplication.Mixed);
+                }
+                
                 Console.WriteLine("\n-----------------------------ENVOI DE L'AUDIO--------------------------------------------------------\n");
                 Console.WriteLine("Client qui va être utilisé : " + client.ConnectionState);
                 //HYPER MEGA IMPORTANT, UTILISER LES USING
                 using (var ffmpeg = CreateStream(path))
                 using (var output = ffmpeg.StandardOutput.BaseStream)
-                using (var discord = client.CreatePCMStream(AudioApplication.Mixed))
                 {
-                    try
                     {
-                        await output.CopyToAsync(discord);
-                        Console.WriteLine("CopyToAsync() terminé: ");
+                        try
+                        {
+                            await output.CopyToAsync(discord);
+                            Console.WriteLine("CopyToAsync() terminé: ");
+                        }
+                        finally { Console.WriteLine("FlushAsync() va être lancé "); await discord.FlushAsync(); }
+                        Console.WriteLine("Execution terminée");
                     }
-                    finally { Console.WriteLine("FlushAsync() va être lancé "); await discord.FlushAsync(); }
-                    Console.WriteLine("Execution terminée");
-
                 }
             }
             else
+            {
                 await channel.SendMessageAsync("Merci de d'abord joindre le canal audio avec !join");
+            }
             Console.WriteLine("\n-------------------------------------------------------------------------------------\n");
         }
 
-        async Task CanReadOrWrite(AudioOutStream discord)
-        {
-            await Context.Channel.SendMessageAsync(discord.CanRead.ToString());
-            await Context.Channel.SendMessageAsync(discord.CanWrite.ToString());
-        }
 
         private Process CreateStream(string path)
         {

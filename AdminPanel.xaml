@@ -23,27 +23,41 @@
                     <ColumnDefinition ></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition Height="25.96"></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition ></RowDefinition>
                 </Grid.RowDefinitions>
-                <Label>Nom de la cible</Label>
-                <TextBox Grid.Column="1" Grid.Row="0" Text="l'ennemi" x:Name="enemy_name_Tbox"  Height="20" Width="100"  />
-                <Label Grid.Row="1">Arme</Label>
-                <ComboBox  DisplayMemberPath="Name"  Grid.Column="1" Grid.Row="1" x:Name="weapon_Combobox"  Height="20" Width="100"  />
-                <Label Grid.Row="2">Métier</Label>
-                <TextBox Grid.Column="1"  Grid.Row="2" x:Name="enemy_job_Tbox" Text="soldat" Height="20" Width="100"  />
+                <Label  Grid.RowSpan="2">Nom de la cible</Label>
+                <TextBox Grid.Column="1" Grid.Row="0" Text="l'ennemi" x:Name="enemy_name_Tbox" Margin="12,3,12,3"  />
+                <Label Grid.Row="1" Grid.RowSpan="2">Arme</Label>
+                <ComboBox  DisplayMemberPath="Name"  Grid.Column="1" Grid.Row="1" x:Name="weapon_Combobox" Margin="12,3,12,3"  />
+                <Label Grid.Row="2"  Grid.RowSpan="2">Métier</Label>
+                <TextBox Grid.Column="1"  Grid.Row="2" x:Name="enemy_job_Tbox" Text="soldat" Margin="12,3,12,3"  />
 
-                <Label Grid.Row="3">Accuracy bonus/malus</Label>
-                <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox"  Grid.Row="3" x:Name="precision_Tbox" Text="0" Height="20" Width="100"  />
-                <Label Grid.Row="4">bonus/malus msg</Label>
-                <TextBox Grid.Column="1"  Grid.Row="4" x:Name="precision_msg_Tbox"   Height="20" Width="100"  />
-
-                <Label Grid.Row="5">Activer Deadeye</Label>
-                <Button Grid.Column="1"  Grid.Row="5" x:Name="dEye_Button" Content="Dead Eye !" Click="DEye_Button_Click" Height="20" Width="100"  />
+                <Label Grid.Row="3" Margin="0,0,0,26" Grid.RowSpan="2">Accuracy bonus/malus</Label>
+                <TextBox Grid.Column="1" PreviewTextInput="NumberValidationTextBox"  Grid.Row="3" x:Name="precision_Tbox" Text="0" Margin="12,3,12,3"  />
+                <Label Grid.Row="4" Margin="0,0,0,9">bonus/malus msg</Label>
+                <TextBox Grid.Column="1"  Grid.Row="4" x:Name="precision_msg_Tbox" Margin="12,3,12,3"  />
+                <Slider Grid.Row="5" 
+                        x:Name="range_Slider"
+                        TickPlacement="BottomRight"
+                        IsSnapToTickEnabled="True"
+                        Minimum="0"
+                        Maximum="4"
+                        TickFrequency="1"
+                        Grid.ColumnSpan="2" 
+                        MaxWidth="300"
+                        ValueChanged="Slider_ValueChanged"
+                        >
+                </Slider>
+                <TextBlock x:Name="distance_Tblock" TextAlignment="Center" Grid.Row="6" Grid.ColumnSpan="2">Distance : Moyenne</TextBlock>
+                <Label Grid.Row="7">Activer Deadeye</Label>
+                <Button Grid.Column="1"  Grid.Row="7" x:Name="dEye_Button" Content="Dead Eye !" Click="DEye_Button_Click" Margin="12,3,12,3"  />
 
             </Grid>
             <Button Grid.Column="0" x:Name="armBomb_Button" Content="Armer la bombe" Click="ArmBomb_Button_Click" Height="20" Width="100"  />
@@ -58,38 +72,38 @@
         </StackPanel>
         <StackPanel Grid.Column="2">
             <TextBlock x:Name="audioPath_tblock" Margin="20"></TextBlock>
-        <ListView 
+            <ListView 
             MaxWidth="250"
             MinHeight="50"
             x:Name="audioList_Lview"
             Grid.Column="3"
             >
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Nom">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" Width="140" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn>
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Nom">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Width="140" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
                                     x:Name="play_button"
                                     Command="{Binding ElementName=audioList_Lview, Path=DataContext.PlayAudioCommand, Mode=OneTime}"
                                     CommandParameter="{Binding}"
                                     Width="30"
                                     Content="Lire">
-                                    <!--Image Source="" /-->
-                                </Button>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+                                        <!--Image Source="" /-->
+                                    </Button>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </StackPanel>
     </Grid>
 </Window>

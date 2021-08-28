@@ -1,4 +1,5 @@
 ﻿using Bot_Test.Database;
+using Bot_Test.Database.Extensions;
 using Bot_Test.MP.Scripts.Discord;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,14 @@ using System.Threading.Tasks;
 
 namespace BT.MP
 {
+    public enum WeaponRange
+    {
+        BOUT_PORTANT = 0,
+        COURTE = 1,
+        MOYENNE = 2,
+        LONGUE = 3,
+        EXTREME = 4
+    }
     /// <summary>
     /// Utilisé pour les descriptions en combat ou pour les recherches dans les coffres
     /// </summary>
@@ -27,43 +36,38 @@ namespace BT.MP
         Bow,
         Sword,
         Spear,
-        Flamethrower
+        Flamethrower,
+        Shotgun
     }
 
     public class Weapon : Entity
     {
         public static ObservableCollection<Weapon> GetDefaultWeapons()
         {
-            if(DbRequester.Connection == null)
+            ObservableCollection<Weapon> wepList = new();
+            var data = DbRequester.ExecuteSelectQuery("SELECT * from Weapon w JOIN Precision p ON w.precision_id=p.precision_id " +
+                                                                             "JOIN Damage d ON w.damage_id=d.damage_id").ToList();
+            foreach (var sqlWeapon in data)
             {
-            // Use default weapons
-            var ak = new Weapon("AK-47", 20, EntitySize.Medium, 0, 30, 65, 30, 30, 3, "Arme de guerre puissante et facile à fabriquer") { wepCategory = WeaponCategory.Rifle };
-            var sniper = new Weapon("Fusil de précision L96", 20, EntitySize.Medium, 0, 50, 90, 10, 10, 1, "Un fusil de précision à verrou, excellente puissance d'arrêt et précision. Malus de précision réduits") { wepCategory = WeaponCategory.Sniper };
-            var minigun = new Weapon("Minigun GAU-2B", 20, EntitySize.Medium, 0, 30, 25, 30, 30, 30, "Faites pleuvoir la mort sur vos ennemis") { wepCategory = WeaponCategory.MachineGun };
-            return new ObservableCollection<Weapon>
-            {
-                ak,
-                sniper,
-                minigun
-            };
-            } else
-            {
-                var data = DbRequester.ExecuteSelectQuery("SELECT * from Weapon w JOIN Precision p ON w.precision_id=p.precision_id " +
-                                                                                 "JOIN Damage d ON w.damage_id=d.damage_id").Select().ToList();
-                Console.WriteLine();
+                wepList.Add(new Weapon(sqlWeapon));
             }
-            return null;
+            return wepList;
         }
 
-        private double damage;
-        private float precision;
+
+
+        private Dictionary<WeaponRange,double> damage;
+        private Dictionary<WeaponRange, float> precision;
         private int curAmmo;
+        public string sfxShootFilename = null;
+        public string sfxArmFilename = null;
         private int maxAmmo;
         private double rateOfFire;
         private string description;
         public WeaponCategory wepCategory;
         public bool singleUsage = false;
-        public Weapon(string Name, int HP, EntitySize Size, double PsyLvl, double Damage, float Precision, int Curammo, int MaxAmmo, double rateOfFire, string Description) : base(Name, HP, Size, PsyLvl)
+
+        public Weapon(string Name, int HP, EntitySize Size, double PsyLvl, Dictionary<WeaponRange, double> Damage, Dictionary<WeaponRange, float> Precision, int Curammo, int MaxAmmo, double rateOfFire, string Description) : base(Name, HP, Size, PsyLvl)
         {
             this.damage = Damage;
             this.precision = Precision;
@@ -73,7 +77,78 @@ namespace BT.MP
             this.description = Description;
         }
 
-        public double Damage
+        public Weapon(Bot_Test.Database.DbModels.SqlObject sqlWeapon)
+        {
+            
+            var fields = sqlWeapon.Fields;
+            this.Name=fields["name"].ToString();
+            this.description = fields["description"].ToString();
+            this.rateOfFire = Convert.ToInt32(fields["firerate"]);
+            this.maxAmmo = Convert.ToInt32(fields["max_ammo"]);
+            this.curAmmo = maxAmmo;
+            this.sfxShootFilename = fields["sfx_shoot_filename"].ToString();
+            this.sfxArmFilename = fields["sfx_arm_filename"].ToString();
+            switch (fields["category"])
+            {
+                case "Rifle":
+                    this.wepCategory = WeaponCategory.Rifle;
+                    break;
+                case "Sniper":
+                    this.wepCategory = WeaponCategory.Sniper;
+                    break;
+                case "Shotgun":
+                    this.wepCategory = WeaponCategory.Shotgun;
+                    break;
+                case "Pistol":
+                    this.wepCategory = WeaponCategory.Pistol;
+                    break;
+                case "MachineGun":
+                    this.wepCategory = WeaponCategory.MachineGun;
+                    break;
+                case "Magnum":
+                    this.wepCategory = WeaponCategory.Magnum;
+                    break;
+                case "SMG":
+                    this.wepCategory = WeaponCategory.SMG;
+                    break;
+                case "Bow":
+                    this.wepCategory = WeaponCategory.Bow;
+                    break;
+                case "Spear":
+                    this.wepCategory = WeaponCategory.Spear;
+                    break;
+                case "RocketLauncher":
+                    this.wepCategory = WeaponCategory.RocketLauncher;
+                    break;
+                case "Explosive":
+                    this.wepCategory = WeaponCategory.Explosive;
+                    break;
+                case "Knife":
+                    this.wepCategory = WeaponCategory.Knife;
+                    break;
+                case "FlameThrower":
+                    this.wepCategory = WeaponCategory.Flamethrower;
+                    break;
+            }
+            new KeyValuePair<WeaponRange, float>(WeaponRange.BOUT_PORTANT, float.Parse(fields["point_blank"].ToString()));
+            this.precision = new Dictionary<WeaponRange, float>() {
+                { WeaponRange.BOUT_PORTANT,float.Parse(fields["point_blank"].ToString()) },
+                { WeaponRange.COURTE, float.Parse(fields["short"].ToString())  },
+                { WeaponRange.MOYENNE, float.Parse(fields["medium"].ToString())  },
+                { WeaponRange.LONGUE, float.Parse(fields["long"].ToString())  },
+                { WeaponRange.EXTREME, float.Parse(fields["extreme"].ToString())  }
+            };
+            this.damage = new Dictionary<WeaponRange, double>() {
+                {WeaponRange.BOUT_PORTANT, double.Parse(fields["point_blank1"].ToString())  },
+                {WeaponRange.COURTE, double.Parse(fields["short1"].ToString())  },
+                {WeaponRange.MOYENNE, double.Parse(fields["medium1"].ToString())  },
+                {WeaponRange.LONGUE, double.Parse(fields["long1"].ToString())  },
+                {WeaponRange.EXTREME, double.Parse(fields["extreme1"].ToString()) }
+            };
+
+        }
+
+        public Dictionary<WeaponRange, double> Damage
         {
             get { return damage; }
             set { this.damage = value; }
@@ -97,10 +172,10 @@ namespace BT.MP
             get { return description; }
         }
 
-        public float Precision { get => precision; set => precision = value; }
+        public Dictionary<WeaponRange, float> Precision { get => precision; set => precision = value; }
 
         //TODO : rajouter la possibilité de toucher des membres adjacents si echec
-        internal void ShootAt(Entity ennemyEntity, EntityPart targetedArea, Dictionary<EntityPartType,double> precisionDict, out string description)
+        internal void ShootAt(Entity ennemyEntity, EntityPart targetedArea, Dictionary<EntityPartType,double> precisionDict, WeaponRange range, out string description)
         {
             
 
@@ -126,9 +201,9 @@ namespace BT.MP
 
             if (shotSuccessfulCount > 0)
             {
-                ennemyEntity.HP -= (int)(damage * shotSuccessfulCount * targetedArea.damageCoeff);
+                ennemyEntity.HP -= (int)(damage[range] * shotSuccessfulCount * targetedArea.damageCoeff);
                 string description2 = "";
-                (ennemyEntity as IAdvancedTarget).TryInjure((int)(shotSuccessfulCount * damage * targetedArea.damageCoeff),shotSuccessfulCount, targetedArea, out description2);
+                (ennemyEntity as IAdvancedTarget).TryInjure((int)(shotSuccessfulCount * damage[range] * targetedArea.damageCoeff),shotSuccessfulCount, targetedArea, out description2);
                 description += "\n" + description2 + "\n";
                 if (!ennemyEntity.IsAlive())
                 {
@@ -143,7 +218,7 @@ namespace BT.MP
                 }
                 else
                 {
-                    description += "Il est toujours debout, santé restante : " + ennemyEntity.HP + " / " + ennemyEntity.maxHP;
+                    description += "Il est toujours en vie, santé restante : " + ennemyEntity.HP + " / " + ennemyEntity.maxHP;
                 }
             }
             else

@@ -32,12 +32,15 @@ namespace BT
         private readonly DelegateCommand playCommand;
         public static ulong guildID;
         public static ulong channelID;
+        public WeaponRange CurrentRange { get; set; } 
+
         public AdminPanel()
         {
             Init();
             playCommand = new DelegateCommand(PlayAudio);
             Loaded += AdminPanel_Loaded;
             windows.Add(this);
+            range_Slider.Value = 2;
         }
 
         private void AdminPanel_Loaded(object sender, RoutedEventArgs e)
@@ -100,7 +103,7 @@ namespace BT
 
         private void DEye_Button_Click(object sender, RoutedEventArgs e)
         {
-            new DeadEyeDiscord().TargetWithPanelData(this);
+            new DeadEyeDiscord().TargetWithPanelData(this,null);
         }
 
         private void DesarmBomb_Button_Click(object sender, RoutedEventArgs e)
@@ -140,5 +143,10 @@ namespace BT
             }
         }
 
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.CurrentRange = (WeaponRange)e.NewValue;
+            distance_Tblock.Text = $"Distance : {CurrentRange.ToString().Replace("_", " ")}";
+        }
     }
 }

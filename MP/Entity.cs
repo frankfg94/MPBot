@@ -33,6 +33,11 @@ namespace BT.MP
             this.size = Size;
         }
 
+        public Entity()
+        {
+
+        }
+
 
         /// <summary>
         /// L'entité n'a plus de points de vie

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BT.MP.Weapon;
 
 namespace BT.MP
 {
@@ -46,12 +47,12 @@ namespace BT.MP
         }
 
 
-        public void GetShotAt( EntityPart targetedArea, Entity objectForAttack,Dictionary<EntityPartType,double> precisionDict, out string attackDescription)
+        public void GetShotAt( EntityPart targetedArea, Entity objectForAttack,Dictionary<EntityPartType,double> precisionDict,WeaponRange range, out string attackDescription)
         {
             attackDescription = "Erreur de Out attackDescription";
             if(objectForAttack is Weapon)
             {
-                (objectForAttack as Weapon).ShootAt(this,targetedArea,precisionDict,out attackDescription);
+                (objectForAttack as Weapon).ShootAt(this,targetedArea,precisionDict,range,out attackDescription);
             }
             else if( objectForAttack == null) // attaque corps à corps
             {

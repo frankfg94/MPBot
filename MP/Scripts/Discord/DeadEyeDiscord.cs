@@ -7,7 +7,9 @@ using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static BT.MP.Weapon;
 
 namespace Bot_Test.MP.Scripts.Discord
 {
@@ -20,19 +22,27 @@ namespace Bot_Test.MP.Scripts.Discord
             throw new NotImplementedException();
         }
 
-        public override async Task TargetAnEntityAsync(IAdvancedTarget e, Weapon wp, List<DeadEyeModifier> modifiers)
+        public override async Task TargetAnEntityAsync(IAdvancedTarget e, Weapon wp,WeaponRange range,List<DeadEyeModifier> modifiers, global::Discord.Commands.SocketCommandContext context)
         {
             await Task.Run(async () => await Program.communicator.DisplayMsgInChat($"------------------------------------------------------------------------------------------------------------"));
             await Task.Run(async () => await Program.communicator.DisplayMsgInChat($"Quelle partie de {e.Entity.Name} visez-vous ?",true));
-            EmbedBuilder embedBuilder = new EmbedBuilder();
+            if(wp.sfxArmFilename != null)
+            {
+                new Thread(async () =>
+                {
+                    await Task.Run(async () => await Program.communicator.PlayAudio(Program.resourceFolderPath + "\\" + wp.sfxArmFilename, false));
+                }).Start();
+            }
+            EmbedBuilder embedBuilder = new();
+
             embedBuilder.Title = "Système De Tir Avancé | "+wp.Name;
             embedBuilder = embedBuilder.WithColor(Color.Orange);
             embedBuilder.AddField("Description de l'arme : ", wp.Description);
-            embedBuilder.AddField("Précision de base de l'arme : ", wp.Precision + "%");
+            embedBuilder.AddField($"Précision de base de l'arme (Portée : {range.ToString().Replace("_"," ")}) : ", wp.Precision[range] + "%");
             embedBuilder.Footer = new EmbedFooterBuilder { Text = "v1.0" };
 
             var areas = e.GetTargetableAreas();
-            var precisionDict = CalculatePrecisions(areas,wp);
+            var precisionDict = CalculatePrecisions(areas,wp,range);
             if(modifiers!=null && modifiers.Count > 0)
             {
                 foreach (var m in modifiers)
@@ -43,7 +53,10 @@ namespace Bot_Test.MP.Scripts.Discord
                     }
                     else
                     {
-                        embedBuilder.AddField($":octagonal_sign: Malus pris en compte : {m.precisionChange} %", "Raison :" + m.message);
+                        if(m.precisionChange != 0)
+                        {
+                            embedBuilder.AddField($":octagonal_sign: Malus pris en compte : {m.precisionChange} %", "Raison :" + m.message);
+                        }
                     }
                     foreach (var k in precisionDict.Keys)
                     {
@@ -73,19 +86,26 @@ namespace Bot_Test.MP.Scripts.Discord
                if(Translator.alphabetUnicode[i] == reaction.Emote.Name)
                {
                     string description = "Erreur description système de tir";
-                    e.GetShotAt(e.GetTargetableAreas()[i],wp,precisionDict, out description);
+                    if(wp.sfxShootFilename != null)
+                    {
+                        new Thread(async () =>
+                        {
+                            await Task.Run(async () => await Program.communicator.PlayAudio(Program.resourceFolderPath + "\\" + wp.sfxShootFilename, true));
+                        }).Start();
+                    }
+                    e.GetShotAt(e.GetTargetableAreas()[i],wp,precisionDict,range, out description);
                     await Task.Run(async () => await Program.communicator.DisplayMsgInChat(description));
                     break;
                }
             }
             await Task.Run(async () => await Program.communicator.DisplayMsgInChat($"------------------------------------------------------------------------------------------------------------"));
         }
-        private Dictionary<EntityPartType, double> CalculatePrecisions(List<EntityPart> parts, Weapon weapon)
+        private Dictionary<EntityPartType, double> CalculatePrecisions(List<EntityPart> parts, Weapon weapon, WeaponRange range)
         {
             Dictionary<EntityPartType, double> dict = new();
             foreach (var area in parts)
             {
-                float precision = weapon.Precision;
+                float precision = weapon.Precision[range];
                 switch (area.size)
                 {
                     case EntitySize.Micro:
@@ -95,18 +115,38 @@ namespace Bot_Test.MP.Scripts.Discord
                         }
                         else
                         {
-                            precision /= 3;
+                            if(range != WeaponRange.BOUT_PORTANT)
+                            {
+                                precision /= 3;
+                            }
                         }
                         break;
                     case EntitySize.Small:
-                        if (weapon.wepCategory == WeaponCategory.Sniper)
+                        if( weapon.wepCategory == WeaponCategory.Shotgun)
                         {
-                            // No precision malus for snipers
-                            precision /= 1.5f;
+                            if(range == WeaponRange.BOUT_PORTANT)
+                            {
+                                precision *= 0.75f;
+                            }
+                        }
+                        else if (weapon.wepCategory == WeaponCategory.Sniper)
+                        {
+                            // No precision malus for snipers, except at close range (no scope is being used)
+                            if (range != WeaponRange.BOUT_PORTANT)
+                            {
+                                precision /= 1.5f;
+                            }
                         } 
                         else
                         {
-                            precision /= 2;
+                            if(range != WeaponRange.BOUT_PORTANT)
+                            {
+                                precision /= 2;
+                            }
+                            else
+                            {
+                                precision /= 1.5f;
+                            }
                         }
                         break;
                     case EntitySize.Medium:
@@ -129,15 +169,17 @@ namespace Bot_Test.MP.Scripts.Discord
             return dict;
         }
 
-        private Dictionary<EntityPartType,double> CalculatePrecisions(IAdvancedTarget target, Weapon weapon)
+        private Dictionary<EntityPartType,double> CalculatePrecisions(IAdvancedTarget target, Weapon weapon, WeaponRange range)
         {
-            return CalculatePrecisions(target.Entity.parts, weapon);
+            return CalculatePrecisions(target.Entity.parts,weapon, range);
         }
 
-        internal async void TargetWithPanelData(AdminPanel adminPanel)
+        internal async void TargetWithPanelData(AdminPanel adminPanel, global::Discord.Commands.SocketCommandContext context)
         {
-            var h = new Human(adminPanel.enemy_name_Tbox.Text,
-                100,
+            adminPanel.Dispatcher.Invoke(new Action(async () =>
+            {
+                var h = new Human(adminPanel.enemy_name_Tbox.Text,
+                60,
                 EntitySize.Medium,
                 0,
                 "Joe",
@@ -156,15 +198,9 @@ namespace Bot_Test.MP.Scripts.Discord
              await TargetAnEntityAsync(
                 h,
                 adminPanel.weapon_Combobox.SelectedItem as Weapon,
-                new List<DeadEyeModifier>() { modifier });
-        }
-
-        public override void Test()
-        {
-            var ak = new Weapon("AK-47", 20, EntitySize.Medium, 0, 30, 65, 30, 30, 3, "arme de guerre puissante et facile à fabriquer") { wepCategory = WeaponCategory.Rifle };
-            Human h = new Human("Marc",100,EntitySize.Medium,0,"Joe","Joe","Caporal",null,-1,null,"USA",'M');
-            h.status = "fonctionnaire";
-            Task.Run(()=>TargetAnEntityAsync(h,ak,null));
+                adminPanel.CurrentRange,
+                new List<DeadEyeModifier>() { modifier },context);
+            }));
         }
 
 

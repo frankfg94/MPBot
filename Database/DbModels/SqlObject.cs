@@ -15,6 +15,9 @@ namespace Bot_Test.Database.DbModels
             this.Fields = fields;
         }
 
+        public T GetField<T>(string fieldName) {
+            return (T)Convert.ChangeType(Fields[fieldName], typeof(T));
+        }
         public SqlObject() { }
 
         public override string ToString()

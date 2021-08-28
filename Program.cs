@@ -23,6 +23,7 @@ namespace BT
     {
         
         public static BT.MP.Discord.Communicator communicator { get; set; }
+        public static AdminPanel adminPanel;
         public static bool MarsProtocolEnabled;
         private  DiscordSocketClient _client;
         private CommandService _commands;
@@ -94,25 +95,28 @@ namespace BT
             _client.UserJoined += AnnounceJoinedUser; //Check if userjoined
             _client.UserVoiceStateUpdated += VoiceUpdate;
             Ping p = new Ping().Init(_client);
-            _client.ReactionAdded += p.ReactionParse;
+
+            Thread t = new(new ThreadStart(() =>
+            {
+                adminPanel = new AdminPanel();
+                 
+                adminPanel.InitializeComponent();
+                _client.ReactionAdded += p.ReactionParse;
+                adminPanel.Show();
+                Dispatcher.Run();
+            }));
+
 
             await _client.LoginAsync(TokenType.Bot, File.ReadAllText("botToken.txt").Trim());
             await _client.StartAsync();
 
-            communicator = new MP.Discord.Communicator(_client, _commands,audioService);
+            communicator = new MP.Discord.Communicator(_client, _commands, audioService);
             //Mars protocol
             _client.ReactionAdded += communicator.ParseReaction;
-            Thread t = new Thread(new ThreadStart(() =>
-            {
-                var main = new AdminPanel();
-                main.InitializeComponent();
-                main.Show();
-                Dispatcher.Run();
-            }));
+
             t.SetApartmentState(ApartmentState.STA);
             t.IsBackground = true;
             t.Start();
-
 
             await Task.Delay(-1);
 
@@ -184,7 +188,7 @@ namespace BT
             {
                 if(MarsProtocolEnabled)
                 {
-                    if (p == null) p = new Ping().Init(_client);
+                    //if (p == null) p = new Ping(null).Init(_client);
                     Console.WriteLine("CONTENT:" + arg.Content);
                     await p.MP(arg.Content);
                 }
