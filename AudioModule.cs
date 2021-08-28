@@ -7,12 +7,12 @@ using System.IO;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-using BT;
+using Bot_Test;
 using System;
 using Discord.WebSocket;
 using System.Windows;
 
-namespace BT
+namespace Bot_Test
 {
     public class AudioModule : ModuleBase<ICommandContext>
     {

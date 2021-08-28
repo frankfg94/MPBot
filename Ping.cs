@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Point = System.Drawing.Point;
 
-namespace BT
+namespace Bot_Test
 {
     public class Ping : ModuleBase<SocketCommandContext>
     {

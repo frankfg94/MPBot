@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BT.MP
+namespace Bot_Test.MP
 {
     public class Vehicle : Entity, IAdvancedTarget
     {

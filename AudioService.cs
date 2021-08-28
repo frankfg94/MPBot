@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Audio;
 using Discord.Commands;
-namespace BT
+namespace Bot_Test
 {
     public class AudioService : ModuleBase<ICommandContext>
     {

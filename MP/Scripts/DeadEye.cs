@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static BT.MP.Weapon;
 
-namespace BT.MP.Scripts
+namespace Bot_Test.MP.Scripts
 {
 
     public class DeadEye 

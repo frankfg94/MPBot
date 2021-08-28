@@ -1,5 +1,5 @@
-﻿using BT;
-using BT.MP.Discord;
+﻿using Bot_Test;
+using Bot_Test.MP.Discord;
 using Discord;
 using System;
 using System.Collections.Generic;

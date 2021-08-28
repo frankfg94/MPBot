@@ -1,6 +1,6 @@
-﻿using BT;
-using BT.MP;
-using BT.MP.Scripts;
+﻿using Bot_Test;
+using Bot_Test.MP;
+using Bot_Test.MP.Scripts;
 using Discord;
 using Discord.Rest;
 using Discord.WebSocket;

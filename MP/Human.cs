@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static BT.MP.Weapon;
 
-namespace BT.MP
+namespace Bot_Test.MP
 {
     class Human : Character, IAdvancedTarget
     {

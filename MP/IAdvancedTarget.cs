@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using static BT.MP.Weapon;
 
-namespace BT.MP
+namespace Bot_Test.MP
 {
     /// <summary>
     /// Cible qui peut être visée membre par membre grâce à une capacité spéciale de tir

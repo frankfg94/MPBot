@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using BT;
+using Bot_Test;
 
 namespace Bot_Test.MP.Scripts
 {

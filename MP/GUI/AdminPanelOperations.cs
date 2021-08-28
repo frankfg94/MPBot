@@ -1,6 +1,6 @@
-﻿using BT.MP.Discord;
-using BT.MP.Discord.Exclusive;
-using BT;
+﻿using Bot_Test.MP.Discord;
+using Bot_Test.MP.Discord.Exclusive;
+using Bot_Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 
-namespace BT.MP.GUI
+namespace Bot_Test.MP.GUI
 {
     public class AdminPanelOperations
     {

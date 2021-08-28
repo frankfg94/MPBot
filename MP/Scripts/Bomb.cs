@@ -1,4 +1,4 @@
-﻿using BT.MP.Discord;
+﻿using Bot_Test.MP.Discord;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace BT.MP.Scripts
+namespace Bot_Test.MP.Scripts
 {
     public class Bomb : Entity
     {
@@ -18,7 +18,7 @@ namespace BT.MP.Scripts
 
         public Bomb(string name, int hp, double psyLvl, EntitySize size, int dureeMillisecs) : base(name, hp, size, psyLvl)
         {
-            Task.Run(()=> BT.Program.communicator.DisplayMsgInChat("Une bombe a été amorcée! !!!!!!"));
+            Task.Run(()=> Bot_Test.Program.communicator.DisplayMsgInChat("Une bombe a été amorcée! !!!!!!"));
             this.bombTimer = new Timer(dureeMillisecs);
             this.bombTimer.Elapsed += CurTimer_Elapsed;
             this.dureeMillisecs = dureeMillisecs;

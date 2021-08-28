@@ -1,8 +1,8 @@
 ﻿using Bot_Test;
 using Bot_Test.MP.Scripts;
 using Bot_Test.MP.Scripts.Discord;
-using BT.MP;
-using BT.MP.GUI;
+using Bot_Test.MP;
+using Bot_Test.MP.GUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,7 +19,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BT
+namespace Bot_Test
 {
     /// <summary>
     /// Logique d'interaction pour Page1.xaml
@@ -130,7 +130,7 @@ namespace BT
         private async void PlayAudio(object sender)
         {
             string fileNameAbsolute = Program.resourceFolderPath + "\\" + sender.ToString();
-            await BT.Program.communicator.PlayAudio(fileNameAbsolute, false);
+            await Bot_Test.Program.communicator.PlayAudio(fileNameAbsolute, false);
         }
 
         #endregion Commands

@@ -1,7 +1,7 @@
 ﻿using Bot_Test.Database.DbModels;
 using Bot_Test.Database.DbTools;
 using Bot_Test.Database.Extensions;
-using BT;
+using Bot_Test;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;

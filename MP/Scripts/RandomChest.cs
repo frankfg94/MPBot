@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BT.MP.Scripts
+namespace Bot_Test.MP.Scripts
 {
     class RandomChest : Entity, IUsable
     {

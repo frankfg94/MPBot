@@ -13,7 +13,7 @@ using Bot_Test.Database.DbModels;
 using System.Collections.Generic;
 using Bot_Test.Database.Extensions;
 
-namespace BT
+namespace Bot_Test
 {
 
     /// <summary>
